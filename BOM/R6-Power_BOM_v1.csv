@@ -1,0 +1,29 @@
+RefDes,Qty,Description,Value,Package,Manufacturer PN,Notes
+F1,1,Fusible principal ANL,80-150A,ANL,,Selon I_continu
+D_TVS_IN,1,TVS entrée,SM8S36A,SM8S,,Bidirectionnelle
+R_PRE,1,Précharge flameproof,10 Ω 5 W,Wirewound,,Fusible
+K1,1,Relais principal,12 V 60 A,Automotive,,Bobine avec diode
+U1,1,Contrôleur diode idéale,LM5050-1,SOIC-8,TI,Adaptateur SOIC→DIP
+Q1-Q2,2,MOSFET N Rds_on bas,<=5 mΩ,TO-220,,Back-to-back
+C_BUS,2,Électrolytique,4700 µF 25 V,Radial,,Réservoir
+C_DECOUP,1,Céramique,100 nF,X7R,,Au bus
+L1,1,Self,10 µH,Axial,,Entrée buck
+U2,1,Buck 12→5 V,1 A,Module,,AEC-Q souhaité
+D_TVS_5V,1,TVS 5 V,SMBJ5.0A,SMBJ,,
+U3,1,Superviseur 5 V,TLV803S,SOT-23,TI,Adaptateur SOT-23
+U4,1,Comparateur,LM393,DIP-8,,
+U5,1,Référence,TL431,TO-92,,
+U6,1,Opto logique,H11L1,DIP-6,,
+U7,2,Schmitt NAND,CD4093B,DIP-14,,Deux boîtiers si besoin
+Qp1-6,6,P-MOSFET remote,FQP27P06,TO-220,,
+Qn1-6,6,NPN driver,2N2222A,TO-92,,
+PTC1-6,6,PTC resettable remote,0.25 A,Radial,,
+TVS_REM1-6,6,TVS remote,SMCJ18A,SMCJ,,
+DZ_G1-6,6,Zener gate P,15 V DO-41,DO-41,1N4744A,
+D_SIG,20,Diode signal,1N4148,DO-35,,
+D_SCHOT,1,Schottky roue libre,1N5819,DO-41,,
+NTC,1,Sonde T°,10 kΩ 3950,,À oeillet
+THERM,1,Thermostat NC,95 °C,,Commande relais série
+METER,1,Compteur,DC430-100A,Panel,,Shunt 100 A 75 mV
+SHUNT,1,Shunt,100 A 75 mV,Barre,,Low-side
+HW,1,Quincaillerie,M6 M8,Steel,,Couvre-bornes

@@ -1,320 +1,333 @@
-# R6-POWER Option B — Checklist source unique
-CHECKLIST DÉFINITIVE — HUB R6-POWER OPTION B SANS MCU
-V1.0
+R6-POWER Option B — Checklist source unique
 
-BLOC A — ENTRÉE PUISSANCE + PROTECTIONS  
-          
-Façade GAUCHE.
+Version courante: v1.3
 
-+12V BAT EXT borne M8 rouge traversante → câble 2 AWG → porte-fusible ANL 150 A ≤ 20 cm batterie → ENTRÉE +12V.
+Objectif
 
-GND CHÂSSIS EXT borne M8 noire traversante → point étoile M8 interne → tôle poncée, rondelle éventail.
+Hub d’alimentation car audio sans MCU. Remote ×6 anti-pop. Protections UV, OV, thermique. Diode idéale LM5050-1 + 2 MOSFET N back-to-back. Compteur DC430-100A. Montage veroboard traversant.
 
-ENTRÉE +12V → relais principal 12 V 60 A en série → LM5050-1 + 2 MOSFET N back-to-back → BUS +12V.
+Sommaire
 
-ENTRÉE +12V → TVS SM8S36A bidirectionnelle vers châssis.
+Connecteurs façade
 
-BUS +12V → 2× 4700 µF 25 V et 1× 100 nF X7R → masse.
+Entrée puissance et protections
 
-Rappels polarité
+Précharge et relais
 
-TVS SM8S36A bi: pas de polarité, une patte au ENTRÉE +12V, l’autre au châssis.
+Alimentation 5 V logique
 
-Électrolytiques: + au bus, − à la masse.
+Détecteurs ACC, UV, OV, Thermique
 
-BLOC B — PRÉCHARGE + BY-PASS RELAIS
+Interrupteur ON OFF
 
-Précharge anti-étincelle: ENTRÉE +12V → R 10 Ω 5 W → BUS +12V.
+Enable et délai relais
 
-Bobine relais: BUS +12V → diode 1N5819 → bobine → NPN → masse.
+Séquencement Remote ×6
 
-Commande bobine = PG_DELAY du BLOC F.
+Anti-boucle masse audio
 
-Diode 1N5819: bande = cathode côté BUS +12V.
+Distribution sorties
 
-BLOC C — ALIM LOGIQUE 5 V
+Compteur DC430-100A
 
-BUS +12V → self 10 µH → 47 µF 25 V + 100 nF → masse → buck 12→5 V 1 A → +5V LOGIQUE.
+Tests sécurité
 
-+5V LOGIQUE → TVS SMBJ5.0A, 47 µF 10 V, 100 nF → masse.
+Bloc LM5050-1 et MOSFET back-to-back
 
-TLV803S 4,63 V: Vdd=+5 V, GND=masse, RESET bas = FAULT_P5.
+Fusible ANL recommandé
 
-Adaptateurs veroboard
+Polarités et rappels rapides
 
-TLV803S SOT-23 → adaptateur SOT-23 → DIP3.
+Schéma mental rapide
+BAT+ → ANL → Relais → LM5050-1 + 2×MOSFET N → BUS +12V → Sorties
+BAT− → Châssis → Shunt 100 A → Point étoile masse → Sorties
+ACC → Opto → Logique 5 V → Enable + Séquencement Remote
+DC430: fils épais sur shunt, fins sur BUS +12V et masse après shunt
 
-BLOC D — ENTRÉES UTILISATEUR + DÉTECTIONS
+1. Connecteurs façade
 
-ACC isolé
+Entrée gauche:
 
-Façade GAUCHE: ACC_IN EXT bornier 5,08 mm.
++12V BAT EXT sur borne M8 rouge
 
-ACC_IN → 10 kΩ → LED H11L1 → masse.
+GND CHÂSSIS EXT sur borne M8 noire
 
-Collecteur H11L1 → 10 kΩ → +5 V. Émetteur → masse.
+ACC_IN EXT sur bornier 5,08 mm
 
-Sortie collecteur = ACC_OK (haut = OK).
+Inter ON OFF SPST 12 V
 
-UVLO / OVLO
+Fenêtre du compteur DC430
 
-LM393 + TL431 2,5 V. Diviseurs depuis BUS +12V.
+Sortie droite:
 
-Seuils: UVLO desc 11,2 V, reprise 11,8 V. OVLO mont 16,2 V, reprise 15,8 V.
+OUT_A1..A4 sur bornes M6 après fusibles MIDI
 
-Sorties open-collector: FAULT_UV, FAULT_OV.
+OUT_D1..D2 sur bornes M4 après mini-fusibles
 
-Thermique
+REMOTE_OUT_1..6 sur borniers 5,08 mm
 
-NTC 10 kΩ sur radiateur MOSFET, pont 10 k/NTC → LM393.
+0V_AUDIO EXT sur borne M5
 
-Arrêt 95 °C, reprise 85 °C → FAULT_TH.
+2. Entrée puissance et protections
 
-OR des fautes
++12V BAT EXT → ANL = 1,25 × I_cont → ENTREE +12V → Relais 12 V 60 A → LM5050-1 + 2 MOSFET N back-to-back → BUS +12V
 
-FAULT_UV, FAULT_OV, FAULT_TH, FAULT_P5 via 1N4148 → nœud FAULT_L.
+TVS entrée: SM8S36A bidirectionnelle entre ENTREE +12V et châssis
 
-FAULT_L → 10 kΩ → +5 V.
-Diodes 1N4148: bande = cathode côté FAULT_L.
+Réservoir bus: BUS +12V → 2× 4700 µF 25 V + 100 nF → masse
 
-LM393 DIP8, TL431 TO-92, H11L1 DIP6, OK veroboard.
+Précharge: résistance 10 Ω 5 W flameproof entre ENTREE +12V et BUS +12V
 
-BLOC E — INTERRUPTEUR ON/OFF UTILISATEUR
+3. Précharge et relais
 
-Façade HAUT: interrupteur panel SPST 12 V.
+La 10 Ω reste en place en permanence
 
-+5V LOGIQUE → COM de l’interrupteur.
+Bobine relais: BUS +12V → 1N5819 → bobine → NPN → masse
 
-Sortie ON → SW_ON.
+Commande NPN = signal PG_DELAY
 
-Pull-down 100 kΩ de SW_ON vers masse. OFF coupe tout.
+4. Alimentation 5 V logique
 
-BLOC F — LOGIQUE ENABLE + DÉLAI RELAIS (CD4093B, DIP14)
+BUS +12V → self 10 µH → 47 µF + 100 nF → buck 12 → 5 V 1 A → +5V LOGIQUE
 
-CD4093B alimenté en +5 V.
+Protection 5 V: TVS SMBJ5.0A + 47 µF + 100 nF vers masse
 
-Inverser FAULT_L avec 1 porte: entrées liées sur FAULT_L → sortie = OK_FAULT (haut = pas de défaut).
+Superviseur: TLV803S 4,63 V. Sortie RESET bas = FAULT_P5
 
-ENABLE = AND(ACC_OK, OK_FAULT, SW_ON) avec NAND + inverseur.
+5. Détecteurs ACC, UV, OV, Thermique
 
-PG_DELAY ≈ 100 ms: ENABLE → R 150 kΩ → nœud X ; X → C 1 µF → masse ; X sur une entrée, ENABLE sur l’autre.
+ACC isolé: ACC_IN → 10 kΩ → LED H11L1 → masse. Collecteur → 10 kΩ → +5 V. Sortie = ACC_OK (haut = OK)
 
-1N4148 en // de R 150 kΩ, cathode côté ENABLE.
+UV OV: LM393 + TL431
 
-CD4093 DIP14, OK veroboard.
+UVLO 11,2 V descente, reprise 11,8 V → FAULT_UV
 
-BLOC G — SÉQUENCEMENT REMOTE ×6 SANS MCU
+OVLO 16,2 V montée, reprise 15,8 V → FAULT_OV
 
-Objectif ON: +50 ms entre canaux. OFF: CH3..CH6 immédiat, CH1..CH2 +150 ms.
+Thermique: NTC 10 kΩ au radiateur MOSFET. Arrêt 95 °C, reprise 85 °C → FAULT_TH
 
-G1. Retard ON_i par canal i = 1..6
+OR des fautes: FAULT_UV, FAULT_OV, FAULT_TH, FAULT_P5 via 1N4148 → ligne FAULT_L tirée au +5 V par 10 kΩ
 
-ENABLE → R_i → nœud D_i.
+6. Interrupteur ON OFF
 
-D_i → C_i → masse.
++5V LOGIQUE → SPST → SW_ON
 
-D_i → entrée A de la porte CD4093 du canal i. ENABLE → entrée B.
+Pull-down SW_ON: 100 kΩ vers masse
 
-Sortie de la porte = ON_i.
+OFF coupe toute logique
 
-1N4148 en // de R_i: cathode côté ENABLE, anode côté D_i.
+7. Enable et délai relais
 
-Valeurs avec C_i = 1 µF X7R:
-R1=0 Ω, R2=75 kΩ, R3=150 kΩ, R4=220 kΩ, R5=300 kΩ, R6=360 kΩ.
+OK_FAULT = NON(FAULT_L)
 
-G2. OFF rapide et OFF 150 ms
+ENABLE = AND(ACC_OK, OK_FAULT, SW_ON) réalisé avec CD4093B (NAND + inverseur)
 
-OFF_FAST = NON(ENABLE) avec 1 porte en inverseur.
+Délai relais PG_DELAY ≈ 100 ms:
 
-OFF_SLOW150: OFF_FAST → R 220 kΩ → nœud Y ; Y → 1 µF → masse ; Y sur entrée A, OFF_FAST sur entrée B ; sortie = OFF_SLOW150.
+ENABLE → 150 kΩ → nœud X
 
-1N4148 en // de R 220 kΩ: cathode côté OFF_FAST.
+X → 1 µF → masse
 
-G3. Autorisation finale REM_EN_i
+Porte NAND avec entrées = ENABLE et X
 
-CH1..CH2: REM_EN_i = ON_i ET NON(OFF_SLOW150) via NAND puis inverseur.
+1N4148 en parallèle de 150 kΩ, cathode côté ENABLE
 
-CH3..CH6: REM_EN_i = ON_i ET NON(OFF_FAST) via NAND puis inverseur.
+Coupe thermique passive de la bobine:
 
-G4. Étages de puissance par canal
+Thermostat NC 90 à 95 °C en série dans la ligne de commande de bobine
 
-P-MOSFET FQP27P06:
+8. Séquencement Remote ×6
 
-Source → BUS +12V.
+Objectif ON: +50 ms par canal. Objectif OFF: CH3..CH6 immédiat, CH1..CH2 +150 ms.
 
-Drain → PTC 0,25 A → borne REMOTE_OUT_i.
+Retards ON par canal i = 1..6:
 
-Gate → 100 kΩ → Source.
+ENABLE → R_i → D_i
 
-Gate ↔ 47 nF ↔ Source.
+D_i → 1 µF → masse
 
-Zener 1N4744A 15 V entre Gate et Source: cathode à la Source, anode à la Gate.
+D_i → entrée A de la porte
 
-Driver NPN 2N2222A:
+ENABLE → entrée B de la porte
 
-Collecteur → Gate P-MOSFET.
+Sortie porte = ON_i
 
-Émetteur → masse.
+1N4148 en parallèle de R_i, cathode côté ENABLE
 
-Base ← 1 kΩ ← REM_EN_i.
+Valeurs RC typiques avec C_i = 1 µF X7R:
 
-1N4148 en // de la 1 kΩ: anode à la base, cathode au REM_EN_i.
+Canal	R_i	C_i
+CH1	0 Ω	1 µF
+CH2	75 kΩ	1 µF
+CH3	150 kΩ	1 µF
+CH4	220 kΩ	1 µF
+CH5	300 kΩ	1 µF
+CH6	360 kΩ	1 µF
 
-TVS SMCJ18A unidirectionnelle: entre REMOTE_OUT_i et masse. Cathode au REMOTE_OUT_i, anode à la masse.
+OFF rapide et OFF +150 ms:
 
-LED canal: REMOTE_OUT_i → LED → 2,2 kΩ → masse. LED anode côté REMOTE_OUT_i.
+OFF_FAST = NON(ENABLE)
 
-BLOC H — ANTI-BOUCLE 0V_AUDIO
+OFF_SLOW150: OFF_FAST → 220 kΩ → Y ; Y → 1 µF → masse ; porte avec entrées OFF_FAST et Y → sortie OFF_SLOW150 ; 1N4148 en parallèle de 220 kΩ, cathode côté OFF_FAST
 
-Façade DROITE: 0V_AUDIO EXT borne M5.
+Autorisation finale REM_EN_i:
 
-Pont redresseur 25 A entre 0V_AUDIO et châssis: + et − ensemble au 0V_AUDIO. ~ et ~ ensemble au châssis.
+CH1..CH2: REM_EN_i = ON_i ET NON(OFF_SLOW150)
 
-En parallèle: 10 Ω 5 W + Y2 4,7 nF entre 0V_AUDIO et châssis.
+CH3..CH6: REM_EN_i = ON_i ET NON(OFF_FAST)
 
-BLOC I — DISTRIBUTION COURANT
+Étages puissance Remote, par canal:
 
-Façade DROITE.
+P MOSFET FQP27P06
 
-OUT_A1..A4: BUS +12V → 4× porte-fusibles MIDI encastrés → bornes M6.
+Source → BUS +12V
 
-OUT_D1..D2: BUS +12V → 2× mini-fusibles 3–7,5 A → bornes M4.
+Drain → PTC 0,25 A → REMOTE_OUT_i
 
-Couples: M6 6–7 N·m, M8 14–16 N·m.
+Gate → 100 kΩ → Source
 
-BLOC J — COMPTEUR DC430-100A 8-EN-1 AVEC SHUNT
+Gate ↔ 47 nF ↔ Source
 
-Shunt 100 A 75 mV obligatoire. Câblage low-side.
+Zener 15 V 1N4744A: cathode Source, anode Gate
 
-J1. Trajet masse
-Carrosserie → câble masse → GND CHÂSSIS EXT → SHUNT → point étoile M8 interne → masses du hub.
+NPN 2N2222A
 
-J2. Fils ÉPAIS du module vers shunt
+Collecteur → Gate P MOSFET
 
-Fil épais ROUGE du module → vis shunt côté hub.
+Émetteur → masse
 
-Fil épais NOIR du module → vis shunt côté carrosserie.
+Base ← 1 kΩ ← REM_EN_i
 
-J3. Fils FINs du module (alimentation + mesure tension)
+1N4148 en parallèle du 1 kΩ, anode base, cathode REM_EN_i
 
-Fin ROUGE “working power +” → BUS +12V après relais et LM5050.
+TVS canal: SMCJ18A unidirectionnelle, cathode au REMOTE_OUT_i, anode masse
 
-Fin NOIR “working power −” → masse après shunt au point étoile interne.
+LED canal: REMOTE_OUT_i → LED → 2,2 kΩ → masse
 
-Fin JAUNE “voltage test +” → BUS +12V après relais et LM5050.
-Plage d’alim typique du module: 4–30 V DC .
+9. Anti-boucle masse audio
 
-J4. Sonde T° du module
-Fixer sur radiateur MOSFET. Brancher au connecteur NTC du module.
+0V_AUDIO EXT sur borne M5
 
-J5. Vérifs
+Pont 25 A: + et − réunis côté 0V_AUDIO, les deux symboles ~ réunis côté châssis
 
-À vide: V ~12–14,5 V, A ≈ 0,00.
+En parallèle: 10 Ω 5 W et condensateur Y2 4,7 nF
 
-Courant négatif affiché: inverser les deux fils épais sur le shunt.
+10. Distribution sorties
 
-Ne jamais relier les deux fils épais du module directement au + et − de l’alim .
+OUT_A1..A4: BUS +12V → fusibles MIDI → bornes M6
 
-BLOC K — CONNECTEURS EXTÉRIEURS
+OUT_D1..D2: BUS +12V → mini-fusibles 3 à 7,5 A → bornes M4
 
-Entrée gauche
+Couvre-bornes isolants
 
-+12V BAT EXT M8 rouge
+Couples: M6 6 à 7 N·m, M8 14 à 16 N·m
 
-GND CHÂSSIS EXT M8 noire
+Re-vérification du serrage à 24 h
 
-ACC_IN EXT bornier 5,08 mm
+11. Compteur DC430-100A
 
-ON/OFF interrupteur SPST 12 V
+Chemin masse low-side: Carrosserie → GND CHÂSSIS EXT → Shunt 100 A 75 mV → Point étoile M8 → masses du hub
 
-Compteur DC430 intégré en façade
+Raccordements module:
 
-Sortie droite
+Fils épais
 
-OUT_A1..A4 M6 après MIDI
+ROUGE sur la vis du shunt côté hub
 
-OUT_D1..D2 M4 après mini
+NOIR sur la vis du shunt côté carrosserie
 
-REMOTE_OUT_1..6 borniers 5,08 mm
+Faisceau 3 fils fin
 
-0V_AUDIO EXT M5
+ROUGE “power +” sur BUS +12V
 
-BLOC L — CÂBLAGE UTILISATEUR
+NOIR “power −” sur masse après shunt au point étoile
 
-Poser ANL 150 A côté batterie.
+JAUNE “voltage +” sur BUS +12V
 
-Câbler +12V BAT EXT et GND CHÂSSIS EXT.
+Important: ne jamais mettre les deux fils épais directement sur + et − de l’alimentation.
 
-Prendre ACC via add-a-fuse vers ACC_IN EXT.
+12. Tests sécurité
 
-Inter sur OFF pour brancher, puis ON pour activer.
+Court-circuit bus: l’ANL doit fondre sans flamme
 
-Relier amplis et DSP aux sorties.
+Inversion polarité: LM5050-1 bloque le retour
 
-REMOTE des appareils sur REMOTE_OUT_i.
+Surchauffe boîtier: thermostat ouvre le relais vers 95 °C
 
-Vérifier le compteur.
+Surintensité remote: PTC de canal déclenche
 
-BLOC M — TESTS
+Vibrations 20 à 30 Hz pendant 15 min
 
-OFF: brancher. Rien ne s’allume.
+Start-stop: creux 6,0 V pendant 500 ms
 
-ON: LED 5 V OK <150 ms, relais colle ~100 ms, pas d’étincelle.
+Brumisation eau
 
-ACC: REMOTE 1→6 montent par pas de 50 ms.
+Critères d’acceptation: aucune fumée, pas de dépôt carbone, MOSFET < 100 °C
 
-OFF: CH3..6 coupent instant, CH1..2 après 150 ms, relais ouvre.
+13. Bloc LM5050-1 et MOSFET back-to-back
 
-UVLO 11,0 V: OFF global, LED UVLO ON.
+Nœuds:
 
-OVLO 16,4 V: OFF global, LED OVLO ON.
+A = sortie relais
 
-Thermique 95 °C: OFF global, LED THERM ON, reprise 85 °C.
-
-Start-stop: creux 6,5 V 300 ms, extinction propre.
-
-BLOC N — LM5050-1 + 2 MOSFET N BACK-TO-BACK SUR VEROBOARD
-
-Adaptateurs
-
-LM5050-1 SOIC-8 → adaptateur SOIC-8 → DIP-8.
-
-MOSFET N TO-220 Rds_on très faible, sur radiateur.
-
-Nœuds
-
-A = sortie du relais principal
-
-B = sources communes des 2 MOSFET N
+B = sources communes des MOSFET
 
 C = BUS +12V
 
-GATE_N = gates communes des 2 MOSFET N
+GATE_N = gates communes
 
-Câblage MOSFET
+Câblage MOSFET N:
 
-MOSFET #1: Drain → A, Source → B, Gate → GATE_N
+MOSFET 1: Drain → A, Source → B, Gate → GATE_N
 
-MOSFET #2: Drain → C, Source → B, Gate → GATE_N
+MOSFET 2: Drain → C, Source → B, Gate → GATE_N
 
-Zener 15 V 1N4744A entre Gate et Source: cathode sur B, anode sur GATE_N
+Diodes internes opposées
 
-100 kΩ entre Gate et Source
+Clamps de gate:
 
-47 nF entre Gate et Source
+Zener 15 V: cathode sur B, anode sur Gate
 
-LM5050-1 vers nœuds
+100 kΩ Gate vers B
+
+47 nF Gate vers B
+
+LM5050-1:
 
 GND → masse
 
 SOURCE/SENSE → B
 
-IN/VIN → A
+IN → A
 
-OUT/VOUT → C
+OUT → C
 
-GATE → série 10 Ω → GATE_N
+GATE → 10 Ω → GATE_N
 
-EN si présent → IN via 100 kΩ (ON par défaut)
+EN → IN via 100 kΩ
 
-Vérif visuelle: les diodes internes des deux MOSFET doivent être opposées. Si tu vois qu’elles “pointent” dans le même sens, tu as inversé Drain/Source d’un des MOSFET.
+Boîtier SOIC-8 sur adaptateur SOIC-8 vers DIP-8 pour veroboard
+
+14. Fusible ANL recommandé
+I_continu	ANL recommandé
+40 à 60 A	70 à 80 A
+60 à 80 A	80 à 100 A
+80 à 100 A	100 à 125 A
+100 à 120 A	125 à 150 A
+15. Polarités et rappels rapides
+
+Bande d’une diode = cathode
+
+LED: anode au plus
+
+Électrolytiques: borne + au BUS, borne − à la masse
+
+TVS SM8S36A entrée: bidirectionnelle, pas de polarité
+
+Temps de retard approximatif: T ≈ 0,693 × R × C
+
+Toujours mettre l’interrupteur sur OFF avant de brancher
+
+Pas de mousse non UL94 V-0 dans le boîtier
+
+En cas d’odeur chaude: OFF, contrôle fusibles et couples
